@@ -162,6 +162,7 @@
       <DependentUpon>202212241105442_CreateTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AuthStatus.cs" />
     <Compile Include="Models\Gmail.cs" />
     <Compile Include="Models\MessageHeader.cs" />
     <Compile Include="Models\NotFoundException.cs" />

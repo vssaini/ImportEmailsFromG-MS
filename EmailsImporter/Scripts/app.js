@@ -2,6 +2,17 @@
 
 var app = {
 
+    init: function (gAuthStatus) {
+        console.log(`Initiating app`);
+        if (gAuthStatus === 'True') {
+            $('#btnAuthorizeGmail').addClass('d-none');
+            $('#btnImportGmail').removeClass('d-none');
+        } else {
+            $('#btnAuthorizeGmail').removeClass('d-none');
+            $('#btnImportGmail').addClass('d-none');
+        }
+    },
+
     fetchGoogleEmails: function () {
 
         const btnId = '#btnImportGmail';
@@ -18,6 +29,7 @@ var app = {
             switch (response.Type) {
                 case 'Ok':
                     if (response.RedirectUri) {
+                        console.log(response.RedirectUri);
                         window.location.href = response.RedirectUri;
                     }
                     else {
@@ -28,6 +40,7 @@ var app = {
 
                 case 'Error':
                     showMessage(response.ErrorMessage, 'error');
+                    $('#container').html(response.ErrorMessage);
                     break;
             }
         }
@@ -41,7 +54,7 @@ var app = {
             showMessage(msg, 'error');
         };
 
-        ajaxCall('GET', '/Google/GetEmails', successCallback, errorCallback, null);
+        ajaxCall('GET', '/Google/GetEmails', successCallback, errorCallback);
     },
 
     bindRows: function(data) {

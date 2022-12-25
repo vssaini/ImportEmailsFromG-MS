@@ -1,4 +1,6 @@
-﻿<section id="body" class="gallery">
+﻿@model EmailsImporter.Models.AuthStatus
+
+<section id="body" class="gallery">
     <div class="container" id="container">
     </div>
 </section>
@@ -6,4 +8,10 @@
 @section scripts
 {
     <script src="~/Scripts/app.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            //console.log('Ready');
+            app.init('@Model.IsGoogleAppAuthorized');
+        });
+    </script>
 }

@@ -24,16 +24,6 @@ namespace EmailsImporter.Services.Google
         }
 
         /// <summary>
-        /// Get a login link to which user will be redirected to for authorization.
-        /// </summary>
-        /// <returns>Redirect Uri</returns>
-        public async Task<string> GetOauthTokenUriAsync()
-        {
-            var authResult = await GetAuthResultAsync(_controller).ConfigureAwait(false);
-            return authResult.RedirectUri;
-        }
-
-        /// <summary>
         /// Get AuthResult which contains the user's credentials if it was loaded successfully from the store. Otherwise it contains the redirect URI for the authorization server.
         /// </summary>
         /// <param name="controller">The current controller.</param>
@@ -52,20 +42,21 @@ namespace EmailsImporter.Services.Google
         {
             var emails = new List<Gmail>();
 
-            try
+            var messages = await GetMessagesAsync(emailAddress);
+            foreach (var msg in messages)
             {
-                var messages = await GetMessagesAsync(emailAddress);
-                foreach (var msg in messages)
+                Gmail email = null;
+                try
                 {
-                    var email = await GetEmailAsync(emailAddress, msg.Id);
-                    if (email == null) continue;
-
-                    emails.Add(email);
+                    email = await GetEmailAsync(emailAddress, msg.Id);
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Error: " + ex);
+                catch (Exception e)
+                {
+                    Debug.WriteLine("Error: " + e);
+                }
+
+                if (email == null) continue;
+                emails.Add(email);
             }
 
             return emails;

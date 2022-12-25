@@ -1,7 +1,6 @@
 ﻿using EmailsImporter.Services.Google;
 using Google.Apis.Auth.OAuth2.Mvc;
 using Google.Apis.Auth.OAuth2.Responses;
-using Google.Apis.Auth.OAuth2.Web;
 using System;
 using System.Configuration;
 using System.Diagnostics;
@@ -43,9 +42,9 @@ namespace EmailsImporter.Controllers
             await Flow.ExchangeCodeForTokenAsync(userId, authorizationCode.Code, returnUrl, taskCancellationToken).ConfigureAwait(false);
 
             // Extract the right state.
-            var redirectUri = await AuthWebUtility.ExtracRedirectFromState(Flow.DataStore, userId,
-                authorizationCode.State).ConfigureAwait(false);
-            return new RedirectResult(redirectUri); // Return to url to which need to redirect
+            //var redirectUri = await AuthWebUtility.ExtracRedirectFromState(Flow.DataStore, userId,
+            //    authorizationCode.State).ConfigureAwait(false);
+            return new RedirectResult(Url.Content("~/"));
         }
 
         protected override ActionResult OnTokenError(TokenErrorResponse errorResponse)
