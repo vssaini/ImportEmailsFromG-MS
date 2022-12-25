@@ -27,12 +27,10 @@ namespace EmailsImporter.Controllers
             if (string.IsNullOrWhiteSpace(authorizationCode.Code))
             {
                 var errorResponse = new TokenErrorResponse(authorizationCode);
-                Logger.Info("Received an error. The response is: {0}", errorResponse);
                 Debug.WriteLine("Received an error. The response is: {0}", errorResponse);
                 return OnTokenError(errorResponse);
             }
 
-            Logger.Debug("Received \"{0}\" code", authorizationCode.Code);
             Debug.WriteLine("Received \"{0}\" code", authorizationCode.Code);
 
             // Exchange the auth code for an access token

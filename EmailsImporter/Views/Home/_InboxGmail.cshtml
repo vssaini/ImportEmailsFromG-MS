@@ -1,0 +1,28 @@
+﻿@model List<EmailsImporter.Models.Gmail>
+
+<div class="section-title">
+    <h2>Imported Gmail Emails</h2>
+    List of @(Model.Count) unread emails.
+</div>
+
+<table class="table table-bordered" id="tblGmailEmails">
+    <thead>
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">From</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Attachments Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Date</td>
+                <td>@item.From</td>
+                <td>@item.Subject</td>
+                <td>@item.Attachments.Count</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -149,6 +149,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AuthCallbackController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\GoogleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -313,6 +314,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Attachments\Google\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -328,6 +330,7 @@
     <Content Include="Views\Shared\Sections\_Header.cshtml" />
     <Content Include="Views\Shared\Sections\_Footer.cshtml" />
     <Content Include="Views\Shared\Sections\_Hero.cshtml" />
+    <Content Include="Views\Home\_InboxGmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202212241105442_CreateTable.resx">

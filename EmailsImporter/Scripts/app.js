@@ -8,6 +8,7 @@ var app = {
         const btnDefaultTxt = 'Import from Gmail';
         const defaultErrorMsg = 'Error occurred while fetching emails';
 
+        showLoader('#container');
         showMessage('Retrieving emails from Gmail', 'info');
         changeButtonState(btnId, 'Importing...', true);
 
@@ -21,7 +22,7 @@ var app = {
                     }
                     else {
                         showMessage('Emails retrieved successfully!', 'success');
-                        app.bindRows(response.Data);
+                        $('#container').html(response.Data);
                     }
                     break;
 
