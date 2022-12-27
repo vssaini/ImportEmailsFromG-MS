@@ -17,7 +17,7 @@ namespace EmailsImporter.Services.Google
         private readonly string[] _scopes = { GmailService.Scope.GmailReadonly };
 
         public override IAuthorizationCodeFlow Flow { get; }
-        public override string AuthCallback => "/AuthCallback/IndexAsync";
+        public override string AuthCallback => ConfigurationManager.AppSettings["GoogleAppRedirectUri"];
 
         public GoogleAppFlowMetaData(IDataStore dataStore)
         {
@@ -48,7 +48,7 @@ namespace EmailsImporter.Services.Google
             var user = controller.Session["user"];
             if (user == null)
             {
-                user = ConfigurationManager.AppSettings["GoogleUserGuid"];
+                user = ConfigurationManager.AppSettings["UserGuid"];
                 controller.Session["user"] = user;
             }
 

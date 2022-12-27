@@ -10,12 +10,12 @@ using System.Web.Mvc;
 
 namespace EmailsImporter.Controllers
 {
-    public class AuthCallbackController : Google.Apis.Auth.OAuth2.Mvc.Controllers.AuthCallbackController
+    public class GAuthController : Google.Apis.Auth.OAuth2.Mvc.Controllers.AuthCallbackController
     {
         private FlowMetadata FlowMetaData { get; }
         protected override FlowMetadata FlowData => FlowMetaData;
-
-        public AuthCallbackController()
+        
+        public GAuthController()
         {
             var dataStore = new EfDataStore();
             FlowMetaData = new GoogleAppFlowMetaData(dataStore);
@@ -38,7 +38,7 @@ namespace EmailsImporter.Controllers
             returnUrl = returnUrl?.Substring(0, returnUrl.IndexOf("?", StringComparison.Ordinal));
 
             // The token is being saved at this point
-            string userId = ConfigurationManager.AppSettings["GoogleUserGuid"];
+            string userId = ConfigurationManager.AppSettings["UserGuid"];
             await Flow.ExchangeCodeForTokenAsync(userId, authorizationCode.Code, returnUrl, taskCancellationToken).ConfigureAwait(false);
 
             // Extract the right state.

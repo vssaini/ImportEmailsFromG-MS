@@ -6,7 +6,7 @@ namespace EmailsImporter.Infrastructure
     {
         [Key]
         [MaxLength(100)]
-        public string Key { get; set; }
+        public string UserId { get; set; }
 
         [MaxLength]
         public string Value { get; set; }

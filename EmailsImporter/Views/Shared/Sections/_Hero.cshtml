@@ -8,10 +8,11 @@
                 <h2>Import unread emails from Gmail using <a href="https://developers.google.com/gmail/api/guides">Gmail API</a> .</h2>
 
                 <div>
-                    <a href="/Home/AuthorizeGmailApp" id="btnAuthorizeGmail" class="btn-get-started">Authorize Gmail App</a>
-                    <a href="JavaScript:void(0);" id="btnImportGmail" class="btn-get-started d-none" onclick="app.fetchGoogleEmails()">Import from Gmail</a>
+                    <a href="/Home/AuthorizeGmailApp" id="btnAuthorizeGmail" class="btn-authorize">Authorize Gmail App</a>
+                    <a href="JavaScript:void(0);" id="btnImportGmail" class="btn-import d-none" onclick="app.fetchGoogleEmails()">Import from Gmail</a>
 
-                    <a href="JavaScript:void(0);" id="btnImportMicrosoft" class="btn-get-started ms-3 d-none">Import from Microsoft</a>
+                    <a href="/Home/AuthorizeMsMailApp" id="btnAuthorizeMsMail" class="btn-authorize">Authorize Microsoft App</a>
+                    <a href="JavaScript:void(0);" id="btnImportMsMail" class="btn-import ms-3 d-none" onclick="app.fetchMicrosoftEmails()">Import from Microsoft</a>
                 </div>
             </div>
 

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using EmailsImporter.Models.Google;
 using static Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp;
 using Message = Google.Apis.Gmail.v1.Data.Message;
 

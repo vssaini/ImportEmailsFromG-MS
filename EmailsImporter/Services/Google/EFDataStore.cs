@@ -36,7 +36,7 @@ namespace EmailsImporter.Services.Google
 
             using (var context = new ApplicationDbContext())
             {
-                var item = context.GoogleAuthStore.FirstOrDefault(x => x.Key == key);
+                var item = context.GoogleAuthStore.FirstOrDefault(x => x.UserId == key);
                 if (item != null)
                 {
                     context.GoogleAuthStore.Remove(item);
@@ -54,7 +54,7 @@ namespace EmailsImporter.Services.Google
 
             using (var context = new ApplicationDbContext())
             {
-                var item = context.GoogleAuthStore.FirstOrDefault(x => x.Key == key);
+                var item = context.GoogleAuthStore.FirstOrDefault(x => x.UserId == key);
                 T value = item == null ? default(T) : JsonConvert.DeserializeObject<T>(item.Value);
                 return Task.FromResult(value);
             }
@@ -70,11 +70,11 @@ namespace EmailsImporter.Services.Google
             using (var context = new ApplicationDbContext())
             {
                 string json = JsonConvert.SerializeObject(value);
-                var item = await context.GoogleAuthStore.FirstOrDefaultAsync(x => x.Key == key).ConfigureAwait(false);
+                var item = await context.GoogleAuthStore.FirstOrDefaultAsync(x => x.UserId == key).ConfigureAwait(false);
 
                 if (item == null)
                 {
-                    context.GoogleAuthStore.Add(new GoogleAuthStore { Key = key, Value = json });
+                    context.GoogleAuthStore.Add(new GoogleAuthStore { UserId = key, Value = json });
                 }
                 else
                 {

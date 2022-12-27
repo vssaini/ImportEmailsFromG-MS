@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EmailsImporter.Models
+namespace EmailsImporter.Models.Google
 {
     public class Gmail
     {

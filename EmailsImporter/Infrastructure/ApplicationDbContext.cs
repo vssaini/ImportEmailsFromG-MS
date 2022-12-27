@@ -10,5 +10,6 @@ namespace EmailsImporter.Infrastructure
         }
 
         public DbSet<GoogleAuthStore> GoogleAuthStore { get; set; }
+        public DbSet<MicrosoftAuthStore> MicrosoftAuthStore { get; set; }
     }
 }
