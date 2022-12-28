@@ -389,7 +389,6 @@
     <Content Include="Content\vendor\purecounter\purecounter_vanilla.js" />
     <Content Include="Content\vendor\swiper\swiper-bundle.min.css" />
     <Content Include="Content\vendor\swiper\swiper-bundle.min.js" />
-    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\vendor\bootstrap-icons\bootstrap-icons.json" />
     <Content Include="Content\vendor\bootstrap-icons\fonts\bootstrap-icons.woff" />
