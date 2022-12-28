@@ -282,6 +282,7 @@
     <Compile Include="Models\AuthStatus.cs" />
     <Compile Include="Models\Google\Gmail.cs" />
     <Compile Include="Models\Google\MessageHeader.cs" />
+    <Compile Include="Models\Microsoft\MSConfig.cs" />
     <Compile Include="Models\Microsoft\UserToken.cs" />
     <Compile Include="Models\Microsoft\MSTokenResponse.cs" />
     <Compile Include="Models\NotFoundException.cs" />
@@ -436,6 +437,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Attachments\Google\" />
+    <Folder Include="Attachments\Microsoft\" />
     <Folder Include="Views\Base\" />
     <Folder Include="Views\Microsoft\" />
     <Folder Include="Views\MsAuth\" />

@@ -1,7 +1,6 @@
 ﻿using EmailsImporter.Models;
 using EmailsImporter.Services.Microsoft;
 using System;
-using System.Configuration;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -9,10 +8,12 @@ namespace EmailsImporter.Controllers
 {
     public class MicrosoftController : BaseController
     {
+        private readonly MsAuthService _msAuthService;
         private readonly MsMailService _msMailService;
 
         public MicrosoftController()
         {
+            _msAuthService = new MsAuthService();
             _msMailService = new MsMailService();
         }
 
@@ -22,10 +23,10 @@ namespace EmailsImporter.Controllers
 
             try
             {
-                var userToken = await _msMailService.GetTokenAsync();
+                var userToken = await _msAuthService.GetTokenAsync();
                 if (string.IsNullOrWhiteSpace(userToken.AccessToken))
                 {
-                    result.RedirectUri = _msMailService.GetRedirectUri();
+                    result.RedirectUri = _msAuthService.GetRedirectUri();
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
 

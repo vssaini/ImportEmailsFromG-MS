@@ -10,8 +10,7 @@
     <script src="~/Scripts/app.js"></script>
     <script type="text/javascript">
         $(function() {
-            //console.log('Ready');
-            app.init('@Model.IsGoogleAppAuthorized');
+            app.init('@Model.IsGoogleAppAuthorized','@Model.IsMicrosoftAppAuthorized');
         });
     </script>
 }

@@ -10,12 +10,12 @@ namespace EmailsImporter.Controllers
     public class HomeController : BaseController
     {
         private readonly GoogleMailService _googleMailService;
-        private readonly MsMailService _msMailService;
+        private readonly MsAuthService _msAuthService;
 
         public HomeController()
         {
             _googleMailService = new GoogleMailService(this);
-            _msMailService = new MsMailService();
+            _msAuthService = new MsAuthService();
         }
 
         public async Task<ActionResult> Index()
@@ -27,7 +27,7 @@ namespace EmailsImporter.Controllers
                 var authResult = await _googleMailService.GetAuthResultAsync(this).ConfigureAwait(false);
                 authStatus.IsGoogleAppAuthorized = !string.IsNullOrWhiteSpace(authResult.Credential?.Token.AccessToken);
 
-                var userToken = await _msMailService.GetTokenAsync();
+                var userToken = await _msAuthService.GetTokenAsync();
                 authStatus.IsMicrosoftAppAuthorized = !string.IsNullOrWhiteSpace(userToken?.AccessToken);
             }
             catch (Exception)
@@ -49,7 +49,7 @@ namespace EmailsImporter.Controllers
 
         public ActionResult AuthorizeMsMailApp()
         {
-            var redirectUri = _msMailService.GetRedirectUri();
+            var redirectUri = _msAuthService.GetRedirectUri();
             return Redirect(redirectUri);
         }
     }
