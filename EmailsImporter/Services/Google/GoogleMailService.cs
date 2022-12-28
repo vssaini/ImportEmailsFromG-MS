@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using EmailsImporter.Models.Google;
 using static Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp;
 using Message = Google.Apis.Gmail.v1.Data.Message;
 
@@ -39,14 +38,14 @@ namespace EmailsImporter.Services.Google
             return authResult;
         }
 
-        public async Task<List<Gmail>> GetAllEmailsAsync(string emailAddress)
+        public async Task<List<Email>> GetAllEmailsAsync(string emailAddress)
         {
-            var emails = new List<Gmail>();
+            var emails = new List<Email>();
 
             var messages = await GetMessagesAsync(emailAddress);
             foreach (var msg in messages)
             {
-                Gmail email = null;
+                Email email = null;
                 try
                 {
                     email = await GetEmailAsync(emailAddress, msg.Id);
@@ -85,7 +84,7 @@ namespace EmailsImporter.Services.Google
             return gmailService;
         }
 
-        private async Task<Gmail> GetEmailAsync(string emailAddress, string messageId)
+        private async Task<Email> GetEmailAsync(string emailAddress, string messageId)
         {
             Message message = await _gmailHelper.GetMessageWithPayloadAsync(emailAddress, messageId);
             if (message == null) return null;
@@ -96,12 +95,12 @@ namespace EmailsImporter.Services.Google
             var msgHeader = GetMessageHeader(message);
             var attachments = await _gmailHelper.GetMessageAttachmentsAsync(emailAddress, message);
 
-            return new Gmail
+            return new Email
             {
                 From = GetTrimmedEmailAddress(msgHeader.FromAddress),
                 Subject = msgHeader.Subject,
                 Body = msgTxt,
-                Date = msgHeader.Date.ToString("dd-MMM-yyyy hh:mm:ss"),
+                Date = msgHeader.Date.ToString(Constants.DateFormat),
                 Attachments = attachments
             };
         }

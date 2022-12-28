@@ -7,8 +7,7 @@
         public string RedirectUri { get; set; }
         public string IdentityUri { get; set; }
         public string Scopes { get; set; }
-        public string State { get; set; }
-       
-        public string TokenUri { get; set; }
+
+        public string TokenUri => $"{IdentityUri}/token";
     }
 }

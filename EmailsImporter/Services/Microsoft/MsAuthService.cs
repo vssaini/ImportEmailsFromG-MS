@@ -1,4 +1,5 @@
-﻿using EmailsImporter.Infrastructure;
+﻿using Dawn;
+using EmailsImporter.Infrastructure;
 using EmailsImporter.Models.Microsoft;
 using Microsoft.Graph;
 using Newtonsoft.Json;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Constants =EmailsImporter.Models.Constants ;
 
 namespace EmailsImporter.Services.Microsoft
 {
@@ -22,11 +24,11 @@ namespace EmailsImporter.Services.Microsoft
 
         public MsAuthService()
         {
-            _msConfig = GetMsConfig();
+            _msConfig = GetAppConfig();
             _db = new ApplicationDbContext();
         }
 
-        private MSConfig GetMsConfig()
+        private MSConfig GetAppConfig()
         {
             var msConfig = new MSConfig
             {
@@ -34,11 +36,8 @@ namespace EmailsImporter.Services.Microsoft
                 ClientSecret = ConfigurationManager.AppSettings["MSClientSecret"],
                 RedirectUri = ConfigurationManager.AppSettings["MSAppRedirectUri"],
                 IdentityUri = ConfigurationManager.AppSettings["MSIdentityUri"],
-                Scopes = ConfigurationManager.AppSettings["MSAppScopes"],
-                State = ConfigurationManager.AppSettings["MSState"]
+                Scopes = ConfigurationManager.AppSettings["MSAppScopes"]
             };
-
-            msConfig.TokenUri = $"{msConfig.IdentityUri}/token";
 
             return msConfig;
         }
@@ -48,7 +47,7 @@ namespace EmailsImporter.Services.Microsoft
             // STEP 1/3 - Make request to MS by which we can get code
             var authorizeUrl = $"{_msConfig.IdentityUri}/authorize?client_id={_msConfig.ClientId}" +
                                $"&scope={_msConfig.Scopes}" +
-                               $"&state={_msConfig.State}" +
+                               $"&state={Constants.State}" +
                                $"&redirect_uri={_msConfig.RedirectUri}" +
                                "&response_type=code&response_mode=query";
 
@@ -123,7 +122,8 @@ namespace EmailsImporter.Services.Microsoft
         {
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                var tokenResponse = JsonConvert.DeserializeObject<MSTokenResponse>(response.Content);
+                var content = Guard.Argument(response.Content, nameof(response.Content)).NotNull().NotEmpty();
+                var tokenResponse = JsonConvert.DeserializeObject<MSTokenResponse>(content);
                 return tokenResponse;
             }
 

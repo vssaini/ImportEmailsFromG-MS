@@ -30,7 +30,7 @@ namespace EmailsImporter.Controllers
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
 
-                var emails = _msMailService.GetAllMails("vssaini.dev@gmail.com");
+                var emails = await _msMailService.GetMessagesAsync(userToken);
                 result.Data = RenderRazorViewToString("~/Views/Home/_InboxMicrosoft.cshtml", emails);
             }
             catch (Exception e)

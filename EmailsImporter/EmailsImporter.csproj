@@ -49,6 +49,9 @@
     <Reference Include="Azure.Core, Version=1.25.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
       <HintPath>..\packages\Azure.Core.1.25.0\lib\net461\Azure.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Dawn.Guard, Version=1.12.0.0, Culture=neutral, PublicKeyToken=234740ae15f786ce, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dawn.Guard.1.12.0\lib\netstandard2.0\Dawn.Guard.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -280,7 +283,8 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuthStatus.cs" />
-    <Compile Include="Models\Google\Gmail.cs" />
+    <Compile Include="Models\Constants.cs" />
+    <Compile Include="Models\Email.cs" />
     <Compile Include="Models\Google\MessageHeader.cs" />
     <Compile Include="Models\Microsoft\MSConfig.cs" />
     <Compile Include="Models\Microsoft\UserToken.cs" />
@@ -296,7 +300,7 @@
     <Compile Include="Services\Google\GoogleAppFlowMetaData.cs" />
     <Compile Include="Services\Google\Base64Extensions.cs" />
     <Compile Include="Services\Microsoft\MsAuthService.cs" />
-    <Compile Include="Services\Microsoft\MSMailService.cs" />
+    <Compile Include="Services\Microsoft\MsMailService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\img\about.jpg" />
@@ -439,8 +443,6 @@
     <Folder Include="Attachments\Google\" />
     <Folder Include="Attachments\Microsoft\" />
     <Folder Include="Views\Base\" />
-    <Folder Include="Views\Microsoft\" />
-    <Folder Include="Views\MsAuth\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

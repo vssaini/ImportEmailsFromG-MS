@@ -1,7 +1,6 @@
 ﻿using EmailsImporter.Models;
 using EmailsImporter.Services.Microsoft;
 using System;
-using System.Configuration;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -9,12 +8,10 @@ namespace EmailsImporter.Controllers
 {
     public class MsAuthController : Controller
     {
-        private readonly string _state;
         private readonly MsAuthService _msAuthService;
 
         public MsAuthController()
         {
-            _state = ConfigurationManager.AppSettings["MSState"];
             _msAuthService = new MsAuthService();
         }
 
@@ -22,14 +19,14 @@ namespace EmailsImporter.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
-            // 2. Get authorization code after redirection from MS Identity Server
+            // STEP 2/3 - Get authorization code after redirection from MS Identity Server
 
             var errorDescription = Request.QueryString["error_description"];
             if (!string.IsNullOrWhiteSpace(errorDescription))
                 throw new Exception(errorDescription);
 
             var state = Request.QueryString["state"];
-            if (state != _state)
+            if (state != Constants.State)
                 throw new Exception("Invalid state.");
 
             var authCode = Request.QueryString["code"];

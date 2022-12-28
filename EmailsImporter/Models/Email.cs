@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace EmailsImporter.Models.Google
+namespace EmailsImporter.Models
 {
-    public class Gmail
+    public class Email
     {
         public string From { get; set; }
         public string Subject { get; set; }
@@ -10,5 +10,10 @@ namespace EmailsImporter.Models.Google
         public string Body { get; set; }
         public string Date { get; set; }
         public List<string> Attachments { get; set; }
+
+        public Email()
+        {
+            Attachments = new List<string>();
+        }
     }
 }
