@@ -13,7 +13,7 @@ namespace EmailsImporter.Services
         /// <returns>Full path of user directory.</returns>
         public string CreateUserAttachDirectory(string emailAddress, bool isGoogleDirectory)
         {
-            var settingName = isGoogleDirectory ? "GoogleAttachmentsFolder" : "MicrosoftAttachmentsFolder";
+            var settingName = isGoogleDirectory ? "GoogleAttachmentsFolder" : "MSAttachmentsFolder";
 
             var attachmentsFolder = ConfigurationManager.AppSettings[settingName];
             var attachDirectoryPath = System.Web.HttpContext.Current.Server.MapPath(attachmentsFolder);
