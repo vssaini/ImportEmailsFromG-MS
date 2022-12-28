@@ -2,13 +2,9 @@
 using EmailsImporter.Models.Microsoft;
 using Microsoft.Graph;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Constants = EmailsImporter.Models.Constants;
-using Directory = System.IO.Directory;
-using File = System.IO.File;
 
 namespace EmailsImporter.Services.Microsoft
 {
@@ -16,10 +12,12 @@ namespace EmailsImporter.Services.Microsoft
     {
         private readonly MsAuthService _msAuthService;
         private GraphServiceClient _graphClient;
+        private readonly AttachmentService _attachService;
 
         public MsMailService()
         {
             _msAuthService = new MsAuthService();
+            _attachService = new AttachmentService();
         }
 
         public async Task<List<Email>> GetMessagesAsync(UserToken uToken)
@@ -28,26 +26,10 @@ namespace EmailsImporter.Services.Microsoft
             _graphClient = await _msAuthService.GetGraphClientByTokenAsync(uToken);
 
             var emailAddress = await GetUserPrincipalNameAsync();
-            var userAttachDirectoryPath = CreateUserAttachDirectory(emailAddress);
+            var userAttachDirectoryPath = _attachService.CreateUserAttachDirectory(emailAddress, false);
 
             var messages = await GetMessagesAsync();
             return messages.Select(msg => GetEmail(msg, userAttachDirectoryPath)).ToList();
-        }
-
-        /// <summary>
-        /// Create directory as per email address in respective attachments folder path.
-        /// </summary>
-        /// <returns>Full path of user directory.</returns>
-        private string CreateUserAttachDirectory(string emailAddress)
-        {
-            var msAttachmentsFolder = ConfigurationManager.AppSettings["MSAttachmentsFolder"];
-            var attachDirectoryPath = System.Web.HttpContext.Current.Server.MapPath(msAttachmentsFolder);
-
-            var userFolderPath = Path.Combine(attachDirectoryPath, emailAddress);
-            if (!Directory.Exists(userFolderPath))
-                Directory.CreateDirectory(userFolderPath);
-
-            return userFolderPath;
         }
 
         private async Task<string> GetUserPrincipalNameAsync()
@@ -93,27 +75,12 @@ namespace EmailsImporter.Services.Microsoft
 
         private void SaveMessageAttachments(string msgId, List<FileAttachment> fileAttachments, string userAttachDirectoryPath)
         {
-            var msgFolderPath = CreateMessageFolderIfNotExist(userAttachDirectoryPath, msgId);
+            var msgFolderPath = _attachService.CreateMessageFolderIfNotExist(userAttachDirectoryPath, msgId);
 
             foreach (var attachment in fileAttachments)
             {
-                SaveAttachmentFile(msgFolderPath, attachment);
+                _attachService.SaveAttachmentFile(msgFolderPath, attachment.Name, attachment.ContentBytes);
             }
-        }
-
-        private string CreateMessageFolderIfNotExist(string userAttachDirectoryPath, string msgId)
-        {
-            var msgFolderPath = Path.Combine(userAttachDirectoryPath, msgId);
-            if (!Directory.Exists(msgFolderPath))
-                Directory.CreateDirectory(msgFolderPath);
-
-            return msgFolderPath;
-        }
-
-        private void SaveAttachmentFile(string msgFolderPath, FileAttachment attachment)
-        {
-            var filePath = Path.Combine(msgFolderPath, attachment.Name);
-            File.WriteAllBytes(filePath, attachment.ContentBytes);
         }
     }
 }

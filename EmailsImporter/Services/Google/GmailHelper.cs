@@ -1,21 +1,20 @@
 ﻿using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace EmailsImporter.Services.Google
 {
     public class GmailHelper
     {
         private readonly GmailService _gmailService;
+        private readonly AttachmentService _attachService;
 
-        public GmailHelper(GmailService gmailService)
+        public GmailHelper(GmailService gmailService, AttachmentService attachService)
         {
             _gmailService = gmailService;
+            _attachService = attachService;
         }
 
         public IList<Message> GetUnReadMessages(string emailAddress, bool includeSpamTrash)
@@ -95,30 +94,26 @@ namespace EmailsImporter.Services.Google
             return nestedMsg;
         }
 
-        public async Task<List<string>> GetMessageAttachmentsAsync(string userId, Message message)
+        public async Task<List<string>> GetMessageAttachmentsAsync(string emailAddress, Message message, string userAttachDirectoryPath)
         {
-            var attachmentsFolder = ConfigurationManager.AppSettings["GoogleAttachmentsFolder"];
-            var folderFullPath = HttpContext.Current.Server.MapPath(attachmentsFolder);
-
             var fileNames = new List<string>();
-            var msgParts = message.Payload.Parts.Where(p => !string.IsNullOrWhiteSpace(p.Filename));
+
+            var msgParts = message.Payload.Parts.Where(p => !string.IsNullOrWhiteSpace(p.Filename)).ToList();
+            if (msgParts.Count <= 0) return fileNames;
+
+            var msgFolderPath = _attachService.CreateMessageFolderIfNotExist(userAttachDirectoryPath, message.Id);
+
             foreach (var msgPart in msgParts)
             {
-                MessagePartBody msgPartBody = await _gmailService.Users.Messages.Attachments.Get(userId, message.Id, msgPart.Body.AttachmentId).ExecuteAsync();
+                MessagePartBody msgPartBody = await _gmailService.Users.Messages.Attachments.Get(emailAddress, message.Id, msgPart.Body.AttachmentId).ExecuteAsync();
 
-                SaveAttachment(msgPartBody, folderFullPath, msgPart.Filename);
+                var fileBytes = msgPartBody.Data.ToBytes();
+                _attachService.SaveAttachmentFile(msgFolderPath, msgPart.Filename, fileBytes);
 
                 fileNames.Add(msgPart.Filename);
             }
 
             return fileNames;
-        }
-
-        private void SaveAttachment(MessagePartBody msgPartBody, string folderPath, string fileName)
-        {
-            var filePath = Path.Combine(folderPath, fileName);
-            byte[] data = msgPartBody.Data.ToBytes();
-            File.WriteAllBytes(filePath, data);
         }
     }
 }

@@ -15,12 +15,14 @@ namespace EmailsImporter.Services.Google
 {
     public class GoogleMailService
     {
-        private GmailHelper _gmailHelper;
         private readonly Controller _controller;
+        private GmailHelper _gmailHelper;
+        private readonly AttachmentService _attachService;
 
         public GoogleMailService(Controller controller)
         {
             _controller = controller;
+            _attachService = new AttachmentService();
         }
 
         /// <summary>
@@ -43,12 +45,16 @@ namespace EmailsImporter.Services.Google
             var emails = new List<Email>();
 
             var messages = await GetMessagesAsync(emailAddress);
+            if (messages.Count <= 0) return emails;
+
+            var userAttachDirectoryPath = _attachService.CreateUserAttachDirectory(emailAddress, true);
+
             foreach (var msg in messages)
             {
                 Email email = null;
                 try
                 {
-                    email = await GetEmailAsync(emailAddress, msg.Id);
+                    email = await GetEmailAsync(emailAddress, msg.Id, userAttachDirectoryPath);
                 }
                 catch (Exception e)
                 {
@@ -65,7 +71,7 @@ namespace EmailsImporter.Services.Google
         private async Task<IList<Message>> GetMessagesAsync(string emailAddress)
         {
             var gmailService = await GetGmailServiceAsync(_controller);
-            _gmailHelper = new GmailHelper(gmailService);
+            _gmailHelper = new GmailHelper(gmailService, _attachService);
 
             var messages = _gmailHelper.GetUnReadMessages(emailAddress, false);
             return messages;
@@ -84,16 +90,16 @@ namespace EmailsImporter.Services.Google
             return gmailService;
         }
 
-        private async Task<Email> GetEmailAsync(string emailAddress, string messageId)
+        private async Task<Email> GetEmailAsync(string emailAddress, string messageId, string userAttachDirectoryPath)
         {
             Message message = await _gmailHelper.GetMessageWithPayloadAsync(emailAddress, messageId);
             if (message == null) return null;
 
             var msgTxt = GetMessageText(message);
-            if (string.IsNullOrEmpty(msgTxt)) return null;
+            if (string.IsNullOrWhiteSpace(msgTxt)) return null;
 
             var msgHeader = GetMessageHeader(message);
-            var attachments = await _gmailHelper.GetMessageAttachmentsAsync(emailAddress, message);
+            var attachments = await _gmailHelper.GetMessageAttachmentsAsync(emailAddress, message, userAttachDirectoryPath);
 
             return new Email
             {
